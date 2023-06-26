@@ -4,12 +4,23 @@
     {
         static void Main(string[] args)
         {
-            var settings = Settings.Load();
-            if (args.Length == 3 && args[0].ToLower() == "--set")
+            try
             {
-                settings.SetValueFromArguments(args[1], args[2]);
-                settings.Save();
-                return;
+                var settings = Settings.Load();
+                if (args.Length == 3 && args[0].ToLower() == "--set")
+                {
+                    settings.SetValueFromArguments(args[1], args[2]);
+                    settings.Save();
+                    return;
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled Exception: {ex}");
             }
         }
     }
