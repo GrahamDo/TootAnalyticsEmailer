@@ -2,13 +2,19 @@
 
 internal class MastodonStatusGetter
 {
+    private readonly Settings _settings;
+    private readonly MastodonApiClient _apiClient;
+
     public MastodonStatusGetter(Settings settings, MastodonApiClient apiClient)
     {
-        throw new NotImplementedException();
+        _settings = settings;
+        _apiClient = apiClient;
     }
 
-    public List<MastodonStatus> GetStatuses(DateTime fromDate, DateTime toDate)
+    public async Task<List<MastodonStatus>> GetStatuses(DateTime fromDate, DateTime toDate)
     {
-        throw new NotImplementedException();
+        await _apiClient.VerifyCredentials(_settings.InstanceUrl, _settings.Token);
+
+        return new List<MastodonStatus>();
     }
 }

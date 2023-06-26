@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             try
             {
@@ -21,7 +21,7 @@
 
                 var apiClient = new MastodonApiClient();
                 var getter = new MastodonStatusGetter(settings, apiClient);
-                var statuses = getter.GetStatuses(fromDate, toDate);
+                var statuses = await getter.GetStatuses(fromDate, toDate);
                 var csvGenerator = new CsvGenerator();
                 var csv = csvGenerator.GenerateFromStatuses(statuses);
                 var emailTemplate = EmailTemplate.Load();
