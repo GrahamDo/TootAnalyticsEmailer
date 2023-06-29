@@ -1,7 +1,8 @@
 {
   "profiles": {
     "TootAnalyticsEmailer": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "--from 1900-01-01 --to 2023-12-31"
     }
   }
 }
