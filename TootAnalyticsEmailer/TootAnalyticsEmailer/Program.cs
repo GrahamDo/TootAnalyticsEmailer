@@ -24,9 +24,11 @@
                 var statuses = await getter.GetStatuses(fromDate, toDate);
                 var csvGenerator = new CsvGenerator();
                 var csv = csvGenerator.GenerateFromStatuses(statuses);
+                var zip = new ZipFileCreator();
+                var zipFileName = zip.Create(csv, "Statuses");
                 var emailTemplate = EmailTemplate.Load();
                 var emailer = new CsvEmailer(settings, emailTemplate);
-                emailer.Send(csv);
+                emailer.Send(zipFileName);
             }
             catch (ApplicationException ex)
             {
@@ -44,10 +46,10 @@
             toDate = default;
 
             var result = args.Length == 4 &&
-                args[0].ToLower() == "--from" &&
-                DateTime.TryParse(args[1], out fromDate) &&
-                args[2].ToLower() == "--to" &&
-                DateTime.TryParse(args[3], out toDate);
+                         args[0].ToLower() == "--from" &&
+                         DateTime.TryParse(args[1], out fromDate) &&
+                         args[2].ToLower() == "--to" &&
+                         DateTime.TryParse(args[3], out toDate);
 
             if (result)
                 toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);

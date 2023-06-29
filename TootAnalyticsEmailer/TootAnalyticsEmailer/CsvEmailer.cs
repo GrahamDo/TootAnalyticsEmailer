@@ -7,7 +7,7 @@ internal class CsvEmailer
         throw new NotImplementedException();
     }
 
-    public void Send(string csv)
+    public void Send(string zipFileName)
     {
         throw new NotImplementedException();
     }
