@@ -23,7 +23,7 @@ internal class MastodonStatus
 
     [JsonProperty("media_attachments")]
     public List<MastodonId> AttachmentIds { get; set; }
-    public bool HasAttachments => AttachmentIds.Any();
+    public string HasAttachments => AttachmentIds.Any() ? "Yes" : "No";
     [JsonProperty("reblogs_count")]
     public uint Boosts { get; set; }
     [JsonProperty("favourites_count")]
