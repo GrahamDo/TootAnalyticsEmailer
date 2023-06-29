@@ -1,4 +1,6 @@
-﻿namespace TootAnalyticsEmailer;
+﻿using TootAnalyticsEmailer.Models;
+
+namespace TootAnalyticsEmailer;
 
 internal class MastodonStatusGetter
 {
@@ -15,6 +17,7 @@ internal class MastodonStatusGetter
     {
         await _apiClient.VerifyCredentials(_settings.InstanceUrl, _settings.Token);
         var accountId = await _apiClient.GetIdForAccountName(_settings.AccountName);
-        return new List<MastodonStatus>();
+        var statuses = await _apiClient.GetStatusesForAccountId(accountId);
+        return statuses.Where(s => s.CreatedAt >= fromDate && s.CreatedAt <= toDate).ToList();
     }
 }

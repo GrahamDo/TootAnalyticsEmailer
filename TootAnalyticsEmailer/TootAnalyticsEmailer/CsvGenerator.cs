@@ -1,4 +1,6 @@
-﻿namespace TootAnalyticsEmailer;
+﻿using TootAnalyticsEmailer.Models;
+
+namespace TootAnalyticsEmailer;
 
 internal class CsvGenerator
 {

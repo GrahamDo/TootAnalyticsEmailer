@@ -71,4 +71,15 @@ internal class MastodonApiClient
         if (content == null)
             throw new InvalidOperationException($"{apiMethodName} API method returned nothing");
     }
+
+    public async Task<List<MastodonStatus>> GetStatusesForAccountId(string accountId)
+    {
+        var request = new RestRequest($"accounts/{accountId}/statuses?limit=40");
+        var response = await _restClient.GetAsync(request);
+        CheckForNullContent(response.Content, $"Get statuses for follower {accountId}");
+
+        Debug.Assert(response.Content != null, "response.Content != null");
+        var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(response.Content);
+        return statuses ?? new List<MastodonStatus>();
+    }
 }
