@@ -49,6 +49,9 @@
                 args[2].ToLower() == "--to" &&
                 DateTime.TryParse(args[3], out toDate);
 
+            if (result)
+                toDate = new DateTime(toDate.Year, toDate.Month, toDate.Day, 23, 59, 59);
+
             return result;
         }
     }
