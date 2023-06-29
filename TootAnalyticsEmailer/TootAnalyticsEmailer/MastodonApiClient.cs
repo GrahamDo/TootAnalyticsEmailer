@@ -1,6 +1,9 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json;
+using RestSharp;
 using RestSharp.Authenticators.OAuth2;
+using System.Diagnostics;
 using System.Text;
+using TootAnalyticsEmailer.Models;
 
 namespace TootAnalyticsEmailer;
 
@@ -36,6 +39,21 @@ internal class MastodonApiClient
         }
     }
 
+    public async Task<string> GetIdForAccountName(string accountName)
+    {
+        if (string.IsNullOrEmpty(accountName))
+            throw new ApplicationException("Please specify the account name");
+
+        var request = new RestRequest($"accounts/lookup?acct={accountName}");
+        var response = await _restClient.GetAsync(request);
+        CheckForNullContent(response.Content, "Lookup account");
+
+        Debug.Assert(response.Content != null, "response.Content != null");
+        var account = JsonConvert.DeserializeObject<MastodonId>(response.Content);
+        return account?.Id ??
+               throw new ApplicationException($"Couldn't get ID for account {accountName}");
+    }
+
     private static string BuildBaseUrl(string instanceUrl)
     {
         var baseUrlSb = new StringBuilder();
@@ -46,5 +64,11 @@ internal class MastodonApiClient
             baseUrlSb.Append("/");
         baseUrlSb.Append("api/v1/");
         return baseUrlSb.ToString();
+    }
+
+    private static void CheckForNullContent(string? content, string apiMethodName)
+    {
+        if (content == null)
+            throw new InvalidOperationException($"{apiMethodName} API method returned nothing");
     }
 }

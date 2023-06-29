@@ -14,7 +14,7 @@ internal class MastodonStatusGetter
     public async Task<List<MastodonStatus>> GetStatuses(DateTime fromDate, DateTime toDate)
     {
         await _apiClient.VerifyCredentials(_settings.InstanceUrl, _settings.Token);
-
+        var accountId = await _apiClient.GetIdForAccountName(_settings.AccountName);
         return new List<MastodonStatus>();
     }
 }
