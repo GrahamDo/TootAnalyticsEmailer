@@ -15,8 +15,8 @@ internal class MastodonStatus
         get
         {
             var result = new StringBuilder();
-            HashTagsList.ForEach(ht => result.Append(ht.Name + " "));
-            return result.ToString();
+            HashTagsList.ForEach(ht => result.Append($"#{ht.Name} "));
+            return result.ToString().Trim();
         }
     }
 
