@@ -8,6 +8,7 @@ internal class MastodonStatus
     [JsonProperty("created_at")]
     public DateTime CreatedAtUtc { get; set; }
     public DateTime CreatedAt => CreatedAtUtc.ToLocalTime();
+    public string Url { get; set; }
     public string Content { get; set; }
     [JsonProperty("tags")]
     public List<MastodonHashTag> HashTagsList { get; set; }
