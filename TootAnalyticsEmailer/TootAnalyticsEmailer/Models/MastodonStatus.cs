@@ -33,6 +33,7 @@ internal class MastodonStatus
 
     public MastodonStatus()
     {
+        Url = string.Empty;
         Content = string.Empty;
         AttachmentIds = new List<MastodonId>();
         HashTagsList = new List<MastodonHashTag>();

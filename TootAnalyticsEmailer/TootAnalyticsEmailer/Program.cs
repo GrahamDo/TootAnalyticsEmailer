@@ -24,8 +24,8 @@
                 var statuses = await getter.GetStatuses(fromDate, toDate);
                 var csvGenerator = new CsvGenerator();
                 var csv = csvGenerator.GenerateFromStatuses(statuses);
-                using var zip = new ZipFileCreator();
-                var zipFileName = zip.Create(csv, "Statuses");
+                using var zip = new ZipFileCreator("Statuses");
+                var zipFileName = zip.Create(csv);
                 var emailText = EmailTemplate.LoadText(fromDate, toDate);
                 var emailer = new ZipFileEmailer(settings);
                 emailer.Send(emailText, zipFileName);

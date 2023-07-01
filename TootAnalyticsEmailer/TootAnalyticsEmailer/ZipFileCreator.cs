@@ -4,14 +4,19 @@ namespace TootAnalyticsEmailer;
 
 internal class ZipFileCreator : IDisposable
 {
-    private string _fullPath;
+    private readonly string _fileName;
+    private readonly string _fullPath;
 
-    public string Create(string csvData, string fileName)
+    public ZipFileCreator(string fileName)
     {
-        _fullPath = $"{Path.GetTempPath()}{fileName}";
+        _fileName = fileName;
+        _fullPath = $"{Path.GetTempPath()}{_fileName}";
+    }
 
-        WriteCsv(csvData, fileName);
-        CreateZip(fileName);
+    public string Create(string csvData)
+    {
+        WriteCsv(csvData, _fileName);
+        CreateZip(_fileName);
         return $"{_fullPath}.zip";
     }
 
