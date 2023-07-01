@@ -83,6 +83,12 @@ namespace TootAnalyticsEmailer
                     case "emailsubject":
                         EmailSubject = value;
                         break;
+                    case "emailfromaddress":
+                        EmailFromAddress = value;
+                        break;
+                    case "emailfromdisplayname":
+                        EmailFromDisplayName = value;
+                        break;
                     case "toemailaddresses":
                         var list = value.Split(";");
                         foreach (var item in list)
