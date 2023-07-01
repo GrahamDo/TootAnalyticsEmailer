@@ -26,8 +26,8 @@
                 var csv = csvGenerator.GenerateFromStatuses(statuses);
                 var zip = new ZipFileCreator();
                 var zipFileName = zip.Create(csv, "Statuses");
-                var emailTemplate = EmailTemplate.Load();
-                var emailer = new CsvEmailer(settings, emailTemplate);
+                var emailText = EmailTemplate.LoadText(fromDate, toDate);
+                var emailer = new CsvEmailer(settings, emailText);
                 emailer.Send(zipFileName);
             }
             catch (ApplicationException ex)

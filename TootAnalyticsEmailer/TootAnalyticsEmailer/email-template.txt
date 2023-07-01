@@ -1,0 +1,8 @@
+﻿Hi,
+
+This is an automated mail.
+
+Please find attached your report of Mastodon statuses posted between {From} and {To}.
+
+Thanks,
+Toot Analytics E-mailer

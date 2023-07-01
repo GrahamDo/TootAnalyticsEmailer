@@ -2,7 +2,7 @@
 
 internal class CsvEmailer
 {
-    public CsvEmailer(Settings settings, EmailTemplate emailTemplate)
+    public CsvEmailer(Settings settings, string bodyText)
     {
         throw new NotImplementedException();
     }
