@@ -12,7 +12,6 @@ namespace TootAnalyticsEmailer
         public string AccountName { get; set; }
         public string SmtpServer { get; set; }
         public ushort SmtpPort { get; set; }
-        public bool SmtpEnableSsl { get; set; }
         public string SmtpUsername { get; set; }
         public string SmtpPassword { get; set; }
         public string EmailSubject { get; set; }
@@ -70,9 +69,6 @@ namespace TootAnalyticsEmailer
                         break;
                     case "smtpport":
                         SmtpPort = Convert.ToUInt16(value);
-                        break;
-                    case "smtpenablessl":
-                        SmtpEnableSsl = Convert.ToBoolean(value);
                         break;
                     case "smtpusername":
                         SmtpUsername = value;
