@@ -40,12 +40,12 @@
             }
         }
 
-        private static bool VerifyArguments(string[] args, out DateTime fromDate, out DateTime toDate)
+        private static bool VerifyArguments(IReadOnlyList<string> args, out DateTime fromDate, out DateTime toDate)
         {
             fromDate = default;
             toDate = default;
 
-            var result = args.Length == 4 &&
+            var result = args.Count == 4 &&
                          args[0].ToLower() == "--from" &&
                          DateTime.TryParse(args[1], out fromDate) &&
                          args[2].ToLower() == "--to" &&

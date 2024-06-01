@@ -7,31 +7,17 @@ namespace TootAnalyticsEmailer
     {
         private const string SettingsFileName = "settings.json";
 
-        public string InstanceUrl { get; set; }
-        public string Token { get; set; }
-        public string AccountName { get; set; }
-        public string SmtpServer { get; set; }
+        public string InstanceUrl { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+        public string AccountName { get; set; } = string.Empty;
+        public string SmtpServer { get; set; } = string.Empty;
         public ushort SmtpPort { get; set; }
-        public string SmtpUsername { get; set; }
-        public string SmtpPassword { get; set; }
-        public string EmailSubject { get; set; }
-        public string EmailFromAddress { get; set; }
-        public string EmailFromDisplayName { get; set; }
-        public Dictionary<string, string> ToEmailAddresses { get; set; }
-
-        public Settings()
-        {
-            InstanceUrl = string.Empty;
-            Token = string.Empty;
-            AccountName = string.Empty;
-            SmtpServer = string.Empty;
-            SmtpUsername = string.Empty;
-            SmtpPassword = string.Empty;
-            EmailSubject = string.Empty;
-            EmailFromAddress = string.Empty;
-            EmailFromDisplayName = string.Empty;
-            ToEmailAddresses = new Dictionary<string, string>();
-        }
+        public string SmtpUsername { get; set; } = string.Empty;
+        public string SmtpPassword { get; set; } = string.Empty;
+        public string EmailSubject { get; set; } = string.Empty;
+        public string EmailFromAddress { get; set; } = string.Empty;
+        public string EmailFromDisplayName { get; set; } = string.Empty;
+        public Dictionary<string, string> ToEmailAddresses { get; set; } = new();
 
         public static Settings Load()
         {

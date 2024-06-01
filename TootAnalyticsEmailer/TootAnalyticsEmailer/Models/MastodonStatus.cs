@@ -8,10 +8,12 @@ internal class MastodonStatus
     [JsonProperty("created_at")]
     public DateTime CreatedAtUtc { get; set; }
     public DateTime CreatedAt => CreatedAtUtc.ToLocalTime();
-    public string Url { get; set; }
-    public string Content { get; set; }
+    public string Url { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+
     [JsonProperty("tags")]
-    public List<MastodonHashTag> HashTagsList { get; set; }
+    public List<MastodonHashTag> HashTagsList { get; set; } = [];
+
     public string HashTags {
         get
         {
@@ -22,7 +24,8 @@ internal class MastodonStatus
     }
 
     [JsonProperty("media_attachments")]
-    public List<MastodonId> AttachmentIds { get; set; }
+    public List<MastodonId> AttachmentIds { get; set; } = [];
+
     public string HasAttachments => AttachmentIds.Any() ? "Yes" : "No";
     [JsonProperty("reblogs_count")]
     public uint Boosts { get; set; }
@@ -30,12 +33,4 @@ internal class MastodonStatus
     public uint Favourites { get; set; }
     [JsonProperty("replies_count")]
     public uint Replies { get; set; }
-
-    public MastodonStatus()
-    {
-        Url = string.Empty;
-        Content = string.Empty;
-        AttachmentIds = new List<MastodonId>();
-        HashTagsList = new List<MastodonHashTag>();
-    }
 }

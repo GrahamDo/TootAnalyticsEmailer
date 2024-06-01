@@ -2,10 +2,5 @@
 
 internal class MastodonHashTag
 {
-    public string Name { get; set; }
-
-    public MastodonHashTag()
-    {
-        Name = string.Empty;
-    }
+    public string Name { get; set; } = string.Empty;
 }

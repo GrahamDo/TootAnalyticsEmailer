@@ -2,10 +2,5 @@
 
 internal class MastodonId
 {
-    public string Id { get; set; }
-
-    public MastodonId()
-    {
-        Id = string.Empty;
-    }
+    public string Id { get; set; } = string.Empty;
 }
