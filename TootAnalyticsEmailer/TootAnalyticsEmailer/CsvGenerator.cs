@@ -15,7 +15,7 @@ internal class CsvGenerator
             var url = isBoost ? s.Reblog.Url : s.Url;
             var content = isBoost ? s.Reblog.Content : s.Content;
             result.AppendLine(
-                $"\"{s.CreatedAt}\",\"{isBoost}\",\"{url}\",\"{content}\",\"{s.HashTags}\",\"{s.HasAttachments}\",\"{s.Boosts}\",\"{s.Favourites}\",\"{s.Replies}\"");
+                $"\"{s.CreatedAt:yyyy-MM-dd HH:mm:ss}\",\"{isBoost}\",\"{url}\",\"{content}\",\"{s.HashTags}\",\"{s.HasAttachments}\",\"{s.Boosts}\",\"{s.Favourites}\",\"{s.Replies}\"");
         });
 
         return result.ToString();
