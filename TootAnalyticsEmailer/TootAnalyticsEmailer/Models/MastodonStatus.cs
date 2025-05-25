@@ -10,7 +10,7 @@ internal class MastodonStatus
     public DateTime CreatedAt => CreatedAtUtc.ToLocalTime();
     public string Url { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
-
+    public MastodonStatus Reblog { get; set; }
     [JsonProperty("tags")]
     public List<MastodonHashTag> HashTagsList { get; set; } = [];
 
