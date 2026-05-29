@@ -1,5 +1,8 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// All properties must have public getters and setters for serialisation to work
 
 namespace TootAnalyticsEmailer.Models;
 
@@ -10,7 +13,7 @@ internal class MastodonStatus
     public DateTime CreatedAt => CreatedAtUtc.ToLocalTime();
     public string Url { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
-    public MastodonStatus Reblog { get; set; }
+    public MastodonStatus? Reblog { get; set; }
     [JsonProperty("tags")]
     public List<MastodonHashTag> HashTagsList { get; set; } = [];
 

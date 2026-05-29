@@ -1,6 +1,6 @@
 ﻿namespace TootAnalyticsEmailer
 {
-    internal class Program
+    public static class Program
     {
         private static async Task Main(string[] args)
         {
@@ -22,8 +22,7 @@
                 var apiClient = new MastodonApiClient();
                 var getter = new MastodonStatusGetter(settings, apiClient);
                 var statuses = await getter.GetStatuses(fromDate, toDate);
-                var csvGenerator = new CsvGenerator();
-                var csv = csvGenerator.GenerateFromStatuses(statuses);
+                var csv = CsvGenerator.GenerateFromStatuses(statuses);
                 using var zip = new ZipFileCreator("Statuses");
                 var zipFileName = zip.Create(csv);
                 var emailText = EmailTemplate.LoadText(fromDate, toDate);

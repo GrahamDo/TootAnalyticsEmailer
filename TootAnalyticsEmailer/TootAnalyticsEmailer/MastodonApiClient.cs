@@ -48,7 +48,7 @@ internal class MastodonApiClient
         var response = await _restClient.GetAsync(request);
         CheckForNullContent(response.Content, "Lookup account");
 
-        Debug.Assert(response.Content != null, "response.Content != null");
+        Debug.Assert(response.Content != null);
         var account = JsonConvert.DeserializeObject<MastodonId>(response.Content);
         return account?.Id ??
                throw new ApplicationException($"Couldn't get ID for account {accountName}");
@@ -78,7 +78,7 @@ internal class MastodonApiClient
         var response = await _restClient.GetAsync(request);
         CheckForNullContent(response.Content, $"Get statuses for follower {accountId}");
 
-        Debug.Assert(response.Content != null, "response.Content != null");
+        Debug.Assert(response.Content != null);
         var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(response.Content);
         return statuses ?? new List<MastodonStatus>();
     }

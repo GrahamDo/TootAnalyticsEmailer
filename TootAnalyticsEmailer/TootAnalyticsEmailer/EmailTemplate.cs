@@ -1,6 +1,6 @@
 ﻿namespace TootAnalyticsEmailer;
 
-internal class EmailTemplate
+internal static class EmailTemplate
 {
     private const string TemplateFileName = "email-template.txt";
 
