@@ -9,7 +9,7 @@ internal static class CsvGenerator
     {
         var result = new StringBuilder();
         result.AppendLine("\"Created At\",\"Is Boost?\",\"URL\",\"Content\",\"Hashtags\",\"Attachments\",\"Boosts\",\"Favourites\",\"Replies\"");
-        statuses.ForEach(s =>
+        foreach (var s in statuses)
         {
             var isBoost = s.Reblog != null;
             var url = isBoost ? s.Reblog?.Url : s.Url;
@@ -19,7 +19,7 @@ internal static class CsvGenerator
             var replies = isBoost ? s.Reblog?.Replies : s.Replies;
             result.AppendLine(
                 $"\"{s.CreatedAt:yyyy-MM-dd HH:mm:ss}\",\"{isBoost}\",\"{url}\",\"{content}\",\"{s.HashTags}\",\"{s.HasAttachments}\",\"{boosts}\",\"{favourites}\",\"{replies}\"");
-        });
+        }
 
         return result.ToString();
     }
