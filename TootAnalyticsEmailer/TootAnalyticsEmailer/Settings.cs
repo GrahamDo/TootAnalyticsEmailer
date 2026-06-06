@@ -1,5 +1,4 @@
-﻿using System.Net.Mail;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace TootAnalyticsEmailer
 {
@@ -25,13 +24,13 @@ namespace TootAnalyticsEmailer
                 return new Settings();
 
             var text = File.ReadAllText(SettingsFileName);
-            return JsonConvert.DeserializeObject<Settings>(text) ??
+            return JsonSerializer.Deserialize<Settings>(text) ??
                    throw new ApplicationException($"Your '{SettingsFileName}' appears to be empty or corrupt.");
         }
 
         public void Save()
         {
-            var serialised = JsonConvert.SerializeObject(this);
+            var serialised = JsonSerializer.Serialize(this);
             File.WriteAllText(SettingsFileName, serialised);
         }
 

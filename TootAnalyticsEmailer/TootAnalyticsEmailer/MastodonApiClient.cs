@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using TootAnalyticsEmailer.Models;
 
 namespace TootAnalyticsEmailer;
@@ -56,7 +56,7 @@ internal class MastodonApiClient
         CheckForNullContent(responseContent, "Lookup account");
 
         Debug.Assert(response != null);
-        var account = JsonConvert.DeserializeObject<MastodonId>(responseContent);
+        var account = JsonSerializer.Deserialize<MastodonId>(responseContent);
         return account?.Id ??
                throw new ApplicationException($"Couldn't get ID for account {accountName}");
     }
@@ -87,7 +87,7 @@ internal class MastodonApiClient
         CheckForNullContent(responseContent, $"Get statuses for follower {accountId}");
 
         Debug.Assert(responseContent != null);
-        var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(responseContent);
+        var statuses = JsonSerializer.Deserialize<List<MastodonStatus>>(responseContent);
         return statuses ?? new List<MastodonStatus>();
     }
 }
