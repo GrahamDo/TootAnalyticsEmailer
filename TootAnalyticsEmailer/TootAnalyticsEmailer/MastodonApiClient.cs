@@ -8,16 +8,24 @@ namespace TootAnalyticsEmailer;
 
 internal class MastodonApiClient
 {
+    private readonly string _token;
     private static readonly HttpClient _client = new();
 
-    public async Task VerifyCredentials(string instanceUrl, string token)
+    public MastodonApiClient(string instanceUrl, string token)
     {
         if (string.IsNullOrEmpty(instanceUrl))
             throw new ApplicationException("Please specify the instance URL");
         if (string.IsNullOrEmpty(token))
             throw new ApplicationException("Please specify the token");
-
-        var request = GetHttpRequestMessage(instanceUrl, "apps/verify_credentials", token);
+        
+        var baseAddress = BuildBaseUrl(instanceUrl);
+        _client.BaseAddress = new Uri(baseAddress);   
+        _token = token;
+    }
+    
+    public async Task VerifyCredentials()
+    {
+        var request = GetHttpRequestMessage("apps/verify_credentials");
         using var response = await _client.SendAsync(request);
         if (!response.IsSuccessStatusCode)
         {
@@ -28,23 +36,21 @@ internal class MastodonApiClient
         }
     }
 
-    private HttpRequestMessage GetHttpRequestMessage(string instanceUrl, string requestUrl, string token)
+    private HttpRequestMessage GetHttpRequestMessage(string requestUrl)
     {
-        var baseUrl = BuildBaseUrl(instanceUrl);
-        var url = $"{baseUrl}{requestUrl}";
-        var request = new HttpRequestMessage(HttpMethod.Get, url)
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUrl)
         {
-            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token) }
+            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token) }
         };
         return request;
     }
 
-    public async Task<string> GetIdForAccountName(string accountName, string instanceUrl, string token)
+    public async Task<string> GetIdForAccountName(string accountName)
     {
         if (string.IsNullOrEmpty(accountName))
             throw new ApplicationException("Please specify the account name");
 
-        var request = GetHttpRequestMessage(instanceUrl, $"accounts/lookup?acct={accountName}", token);
+        var request = GetHttpRequestMessage($"accounts/lookup?acct={accountName}");
         using var response = await _client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
         CheckForNullContent(responseContent, "Lookup account");
@@ -73,9 +79,9 @@ internal class MastodonApiClient
             throw new InvalidOperationException($"{apiMethodName} API method returned nothing");
     }
 
-    public async Task<List<MastodonStatus>> GetStatusesForAccountId(string accountId, string instanceUrl, string token)
+    public async Task<List<MastodonStatus>> GetStatusesForAccountId(string accountId)
     {
-        var request = GetHttpRequestMessage(instanceUrl, $"accounts/{accountId}/statuses?limit=40", token);
+        var request = GetHttpRequestMessage($"accounts/{accountId}/statuses?limit=40");
         using var response = await _client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
         CheckForNullContent(responseContent, $"Get statuses for follower {accountId}");

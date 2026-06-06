@@ -19,9 +19,9 @@
                     throw new ApplicationException("Invalid arguments: required --from <date> --to <date>");
                 }
 
-                var apiClient = new MastodonApiClient();
-                var getter = new MastodonStatusGetter(settings, apiClient);
-                var statuses = await getter.GetStatuses(fromDate, toDate);
+                var apiClient = new MastodonApiClient(settings.InstanceUrl, settings.Token);
+                var getter = new MastodonStatusGetter(apiClient);
+                var statuses = await getter.GetStatuses(settings.AccountName, fromDate, toDate);
                 var csv = CsvGenerator.GenerateFromStatuses(statuses);
                 using var zip = new ZipFileCreator("Statuses");
                 var zipFileName = zip.Create(csv);
