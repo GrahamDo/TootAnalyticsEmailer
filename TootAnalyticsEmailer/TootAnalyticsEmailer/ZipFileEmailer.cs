@@ -1,5 +1,6 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using MailKit.Security;
+﻿// Sadly we HAVE to use Mailkit because System.Net.Mail.SmtpClient doesn't support SSL/TLS connections without a client certificate, and most SMTP servers require SSL/TLS.
+// MailKit is a popular third-party library that provides robust support for sending emails, including handling SSL/TLS connections, authentication, and attachments,
+// making it a suitable choice for this application.
 using MimeKit;
 using MailKit.Net.Smtp;
 
