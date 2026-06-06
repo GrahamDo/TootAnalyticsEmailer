@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators.OAuth2;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using TootAnalyticsEmailer.Models;
 
@@ -9,7 +8,7 @@ namespace TootAnalyticsEmailer;
 
 internal class MastodonApiClient
 {
-    private RestClient _restClient = null!;
+    private static readonly HttpClient _client = new();
 
     public async Task VerifyCredentials(string instanceUrl, string token)
     {
@@ -18,38 +17,40 @@ internal class MastodonApiClient
         if (string.IsNullOrEmpty(token))
             throw new ApplicationException("Please specify the token");
 
-        var baseUrl = BuildBaseUrl(instanceUrl);
-        var options = new RestClientOptions(baseUrl)
+        var request = GetHttpRequestMessage(instanceUrl, "apps/verify_credentials", token);
+        using var response = await _client.SendAsync(request);
+        if (!response.IsSuccessStatusCode)
         {
-            Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(token, "Bearer")
-        };
-        _restClient = new RestClient(options);
-
-        var request = new RestRequest($"apps/verify_credentials");
-        try
-        {
-            await _restClient.GetAsync(request);
-        }
-        catch (HttpRequestException ex)
-        {
-            if (ex.Message.Contains("Unauthorized"))
-                throw new ApplicationException("The token you entered was not valid");
-
-            throw;
+            if (response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
+                throw new ApplicationException("Invalid Mastodon token");
+            
+            throw new HttpRequestException($"Request failed with status code {response.StatusCode}");
         }
     }
 
-    public async Task<string> GetIdForAccountName(string accountName)
+    private HttpRequestMessage GetHttpRequestMessage(string instanceUrl, string requestUrl, string token)
+    {
+        var baseUrl = BuildBaseUrl(instanceUrl);
+        var url = $"{baseUrl}{requestUrl}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url)
+        {
+            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token) }
+        };
+        return request;
+    }
+
+    public async Task<string> GetIdForAccountName(string accountName, string instanceUrl, string token)
     {
         if (string.IsNullOrEmpty(accountName))
             throw new ApplicationException("Please specify the account name");
 
-        var request = new RestRequest($"accounts/lookup?acct={accountName}");
-        var response = await _restClient.GetAsync(request);
-        CheckForNullContent(response.Content, "Lookup account");
+        var request = GetHttpRequestMessage(instanceUrl, $"accounts/lookup?acct={accountName}", token);
+        using var response = await _client.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        CheckForNullContent(responseContent, "Lookup account");
 
-        Debug.Assert(response.Content != null);
-        var account = JsonConvert.DeserializeObject<MastodonId>(response.Content);
+        Debug.Assert(response != null);
+        var account = JsonConvert.DeserializeObject<MastodonId>(responseContent);
         return account?.Id ??
                throw new ApplicationException($"Couldn't get ID for account {accountName}");
     }
@@ -72,14 +73,15 @@ internal class MastodonApiClient
             throw new InvalidOperationException($"{apiMethodName} API method returned nothing");
     }
 
-    public async Task<List<MastodonStatus>> GetStatusesForAccountId(string accountId)
+    public async Task<List<MastodonStatus>> GetStatusesForAccountId(string accountId, string instanceUrl, string token)
     {
-        var request = new RestRequest($"accounts/{accountId}/statuses?limit=40");
-        var response = await _restClient.GetAsync(request);
-        CheckForNullContent(response.Content, $"Get statuses for follower {accountId}");
+        var request = GetHttpRequestMessage(instanceUrl, $"accounts/{accountId}/statuses?limit=40", token);
+        using var response = await _client.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        CheckForNullContent(responseContent, $"Get statuses for follower {accountId}");
 
-        Debug.Assert(response.Content != null);
-        var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(response.Content);
+        Debug.Assert(responseContent != null);
+        var statuses = JsonConvert.DeserializeObject<List<MastodonStatus>>(responseContent);
         return statuses ?? new List<MastodonStatus>();
     }
 }
